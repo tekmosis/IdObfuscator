@@ -1,6 +1,20 @@
 <?php
+/**
+ * +-----------------------------------------------------------------------------+
+ * ID Obfuscation
+ * +-----------------------------------------------------------------------------+
+ * Take a numerical ID and turn it into a hash which can be decoded back to its
+ * original number.
+ *
+ * @link https://github.com/tekmosis/IdObfuscator
+ */
 class IdObfuscator {
+	const CRYPT_SALT = '';
 
+	/**
+	 * @param int $id
+	 * @return bool|string
+	 */
 	public static function encode($id) {
 		if (!is_numeric($id) or $id < 1) {return FALSE;}
 		$id = (int)$id;
@@ -19,6 +33,10 @@ class IdObfuscator {
 		return $oid;
 	}
 
+	/**
+	 * @param string $oid
+	 * @return int
+	 */
 	public static function decode($oid) {
 		if (!preg_match('/^[A-Z0-9\:\$]{21,23}$/i',$oid)) {return 0;}
 		$oid      = str_replace(array('$',':'),array('+','/'),$oid);
@@ -37,8 +55,13 @@ class IdObfuscator {
 		return $id;
 	}
 
+	/**
+	 * @param string $str
+	 * @param int $len
+	 * @return string
+	 */
 	private static function getHash($str,$len) {
-		return substr(sha1($str.CRYPT_SALT),0,$len);
+		return substr(sha1($str.self::CRYPT_SALT),0,$len);
 	}
 }
 ?>
